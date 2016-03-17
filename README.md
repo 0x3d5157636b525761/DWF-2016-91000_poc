@@ -1,5 +1,5 @@
-Bezeq Netgear DGN2200 Exploit POC 2016
-======================================
+Bezeq Netgear DGN2200 Exploit POC (DWF-2016-91000)
+==================================================
 
 This POC demonstrates how to execute commands on the DGN2200 router (having Bezeq's firmware).
 
